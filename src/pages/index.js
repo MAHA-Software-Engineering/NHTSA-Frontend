@@ -1,12 +1,26 @@
 import React from "react";
-import BaseLayout from "../components/layouts/BaseLayout";
+import { useSession, signIn, signOut } from "next-auth/client/_utils";
 
-function HomePage() {
+export default function HomePage() {
+  const [session, loading] = useSession();
+
+  if (loading)
+  {
+    return null;
+  }
+
+  if (session) {
+    return (
+      <>
+        Signed in as {session.user.email} <br />
+        <button onClick={() => signOut()}>Sign Out</button>
+      </>
+    )
+  }
   return (
-    <BaseLayout>
-      <h1 className="text-black">HomePage</h1>
-    </BaseLayout>
-  );
+    <>
+      Not Signed In <br />
+      <button onClick={() => signIn()}>Sign In</button>
+    </>
+  )
 }
-
-export default HomePage;
